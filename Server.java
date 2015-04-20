@@ -42,7 +42,7 @@ public class Server
         client = socket.accept();
         System.out.println("Client connected on port " + client.getPort());
         lastClientId++;
-        new ServerThread(lastClientId, needsSender);
+        (new ServerThread(client, lastClientId, needsSender)).start();
     }
 
     public void setupStreams() throws IOException {
