@@ -45,7 +45,6 @@ public class ServerThread extends Thread
 
     public void tellClientId() {
         try {
-            clientId++;
             System.out.println("Sending ID " + clientId + " to client");
             outputStream.writeInt(clientId);
         } catch (IOException io) {}
