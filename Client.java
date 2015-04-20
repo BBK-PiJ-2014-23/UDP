@@ -7,7 +7,7 @@ public class Client
     private static final int SERVER_PORT = 2000;
 
     private Socket socket;
-    
+
     private DatagramSocket datagramSocket;
     InetAddress ip;
 
@@ -16,7 +16,7 @@ public class Client
 
     private int clientId;
     private boolean isSender;
-    
+
     String test;
 
     public Client() {
@@ -29,8 +29,11 @@ public class Client
         client.setupStreams();
         client.acceptClientId();
         client.acceptRole();
-        client.sendData();
-        client.recieveData();
+        if (client.isSender) {
+            client.sendData();
+        } else {
+            client.recieveData();
+        }
     }
 
     public void connect() throws UnknownHostException, IOException {
@@ -62,7 +65,7 @@ public class Client
         DatagramPacket packetToServer = new DatagramPacket(test, test.length, ip, 2000);
         datagramSocket.send(packetToServer);
     }
-    
+
     public void recieveData() throws IOException {
         byte[] data = new byte[2];
         DatagramPacket packetFromServer = new DatagramPacket(data, data.length);
