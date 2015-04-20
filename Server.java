@@ -7,12 +7,15 @@ public class Server
 
     private ServerSocket socket;
     private Socket client;
-    
+
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
 
+    private boolean needsSender;
+
     public Server() throws IOException {
         socket = new ServerSocket(PORT);
+        needsSender = true;
     }
 
     public static void main(String[] args) throws IOException {
@@ -20,17 +23,23 @@ public class Server
         while(true) {
             server.listen();
             server.setupStreams();
+            server.tellClientRole();
         }
     }
-    
+
     public void listen() throws IOException {
         System.out.println("Server listening on port " + socket.getLocalPort());
         client = socket.accept();
         System.out.println("Client connected on port " + client.getPort());
     }
-    
+
     public void setupStreams() throws IOException {
         inputStream = new DataInputStream(client.getInputStream());
         outputStream = new DataOutputStream(client.getOutputStream());
+    }
+
+    public void tellClientRole() throws IOException {
+        System.out.println("This needs a sender? " + needsSender);
+        outputStream.writeBoolean(needsSender);
     }
 }
