@@ -34,7 +34,7 @@ public class ServerThread extends Thread
             if (needsSender) {
                 recieveData();
             } else {
-                //sendData();
+                sendData();
             }
         }
     }
