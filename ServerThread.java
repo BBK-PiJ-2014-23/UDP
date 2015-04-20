@@ -31,8 +31,11 @@ public class ServerThread extends Thread
             setupStreams();
             tellClientId();
             tellClientRole();
-            recieveData();
-            sendData();
+            if (needsSender) {
+                recieveData();
+            } else {
+                //sendData();
+            }
         }
     }
 

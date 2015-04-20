@@ -43,6 +43,9 @@ public class Server
         System.out.println("Client connected on port " + client.getPort());
         lastClientId++;
         (new ServerThread(client, lastClientId, needsSender)).start();
+        if (needsSender) {
+            needsSender = false;
+        }
     }
 
     public void setupStreams() throws IOException {
