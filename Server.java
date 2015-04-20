@@ -10,13 +10,13 @@ public class Server
 
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
-    
+
     private DatagramSocket datagramSocket;
     private DatagramPacket packetFromClient;
-    
+
     private int lastClientId;
     private boolean needsSender;
-    
+
     String test;
 
     public Server() throws IOException {
@@ -33,6 +33,7 @@ public class Server
             server.tellClientId();
             server.tellClientRole();
             server.recieveData();
+            server.sendData();
         }
     }
 
@@ -47,23 +48,31 @@ public class Server
         outputStream = new DataOutputStream(client.getOutputStream());
         datagramSocket = new DatagramSocket(2000);
     }
-    
+
     public void tellClientId() throws IOException {
         lastClientId++;
         System.out.println("Sending ID " + lastClientId + " to client");
         outputStream.writeInt(lastClientId);
     }
-    
+
     public void tellClientRole() throws IOException {
         System.out.println("This needs a sender? " + needsSender);
         outputStream.writeBoolean(needsSender);
     }
-    
+
     public void recieveData() throws IOException {
         byte[] data = new byte[2];
         packetFromClient = new DatagramPacket(data, data.length);
         datagramSocket.receive(packetFromClient);
-        String test = new String(packetFromClient.getData());
+        test = new String(packetFromClient.getData());
         System.out.println("Recieved test data from client " + test);
+    }
+
+    public void sendData() throws IOException {
+        InetAddress ip = packetFromClient.getAddress();
+        int port = packetFromClient.getPort();
+        byte[] data = test.getBytes();
+        DatagramPacket packetToClient = new DatagramPacket(data, data.length, ip, port);
+        datagramSocket.send(packetToClient);
     }
 }
