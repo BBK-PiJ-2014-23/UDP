@@ -18,10 +18,11 @@ public class ServerThread extends Thread
 
     String test;
 
-    public ServerThread(int clientId, boolean needsSender) throws IOException {
+    public ServerThread(Socket client, int clientId, boolean needsSender) throws IOException {
         super();
+        this.client = client;
         this.clientId = clientId;
-        needsSender = needsSender;
+        this.needsSender = needsSender;
     }
 
     @Override
