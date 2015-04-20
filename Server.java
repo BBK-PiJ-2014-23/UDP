@@ -29,11 +29,11 @@ public class Server
         Server server = new Server();
         while(true) {
             server.listen();
-            server.setupStreams();
-            server.tellClientId();
-            server.tellClientRole();
-            server.recieveData();
-            server.sendData();
+            //server.setupStreams();
+            //server.tellClientId();
+            //server.tellClientRole();
+            //server.recieveData();
+            //server.sendData();
         }
     }
 
@@ -41,6 +41,8 @@ public class Server
         System.out.println("Server listening on port " + socket.getLocalPort());
         client = socket.accept();
         System.out.println("Client connected on port " + client.getPort());
+        lastClientId++;
+        new ServerThread(lastClientId, needsSender);
     }
 
     public void setupStreams() throws IOException {
@@ -50,7 +52,7 @@ public class Server
     }
 
     public void tellClientId() throws IOException {
-        lastClientId++;
+        
         System.out.println("Sending ID " + lastClientId + " to client");
         outputStream.writeInt(lastClientId);
     }
