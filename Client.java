@@ -11,6 +11,7 @@ public class Client
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
     
+    private int clientId;
     private boolean isSender;
 
     public Client() {
@@ -21,6 +22,7 @@ public class Client
         Client client = new Client();
         client.connect();
         client.setupStreams();
+        client.acceptClientId();
         client.acceptRole();
     }
 
@@ -34,7 +36,12 @@ public class Client
         inputStream = new DataInputStream(socket.getInputStream());
         outputStream = new DataOutputStream(socket.getOutputStream());
     }
-
+    
+    public void acceptClientId() throws IOException {
+        clientId = inputStream.readInt();
+        System.out.println("Recieved client id from server is " + clientId);
+    }
+    
     public void acceptRole() throws IOException {
         isSender = inputStream.readBoolean();
         System.out.println("Client is a sender? " + isSender);
