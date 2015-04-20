@@ -16,6 +16,8 @@ public class Client
 
     private int clientId;
     private boolean isSender;
+    
+    String test;
 
     public Client() {
         isSender = false;
@@ -28,6 +30,7 @@ public class Client
         client.acceptClientId();
         client.acceptRole();
         client.sendData();
+        client.recieveData();
     }
 
     public void connect() throws UnknownHostException, IOException {
@@ -58,5 +61,13 @@ public class Client
         byte[] test = Integer.toString(clientId).getBytes();
         DatagramPacket packetToServer = new DatagramPacket(test, test.length, ip, 2000);
         datagramSocket.send(packetToServer);
+    }
+    
+    public void recieveData() throws IOException {
+        byte[] data = new byte[2];
+        DatagramPacket packetFromServer = new DatagramPacket(data, data.length);
+        datagramSocket.receive(packetFromServer);
+        test = new String(packetFromServer.getData());
+        System.out.println("Recieved test data from server via client " + test);
     }
 }
