@@ -11,8 +11,13 @@ public class Server
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
     
+    private DatagramSocket datagramSocket;
+    private DatagramPacket packetFromClient;
+    
     private int lastClientId;
     private boolean needsSender;
+    
+    String test;
 
     public Server() throws IOException {
         socket = new ServerSocket(PORT);
@@ -27,6 +32,7 @@ public class Server
             server.setupStreams();
             server.tellClientId();
             server.tellClientRole();
+            server.recieveData();
         }
     }
 
@@ -39,6 +45,7 @@ public class Server
     public void setupStreams() throws IOException {
         inputStream = new DataInputStream(client.getInputStream());
         outputStream = new DataOutputStream(client.getOutputStream());
+        datagramSocket = new DatagramSocket(2000);
     }
     
     public void tellClientId() throws IOException {
@@ -50,5 +57,13 @@ public class Server
     public void tellClientRole() throws IOException {
         System.out.println("This needs a sender? " + needsSender);
         outputStream.writeBoolean(needsSender);
+    }
+    
+    public void recieveData() throws IOException {
+        byte[] data = new byte[2];
+        packetFromClient = new DatagramPacket(data, data.length);
+        datagramSocket.receive(packetFromClient);
+        String test = new String(packetFromClient.getData());
+        System.out.println("Recieved test data from client " + test);
     }
 }
