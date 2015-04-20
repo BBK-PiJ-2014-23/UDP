@@ -8,6 +8,9 @@ public class Client
     
     private Socket socket;
     
+    private DataInputStream inputStream;
+    private DataOutputStream outputStream;
+    
     public Client() {
         
     }
@@ -21,5 +24,10 @@ public class Client
         System.out.println("Connecting to server...");
         socket = new Socket(SERVER_IP, SERVER_PORT);
         System.out.println("Successfully connected via port " + socket.getPort());
+    }
+    
+    public void setupStreams() throws IOException {
+        inputStream = new DataInputStream(socket.getInputStream());
+        outputStream = new DataOutputStream(socket.getOutputStream());
     }
 }
