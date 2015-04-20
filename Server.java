@@ -10,11 +10,13 @@ public class Server
 
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
-
+    
+    private int lastClientId;
     private boolean needsSender;
 
     public Server() throws IOException {
         socket = new ServerSocket(PORT);
+        lastClientId = 0;
         needsSender = true;
     }
 
@@ -23,6 +25,7 @@ public class Server
         while(true) {
             server.listen();
             server.setupStreams();
+            server.tellClientId();
             server.tellClientRole();
         }
     }
@@ -37,7 +40,13 @@ public class Server
         inputStream = new DataInputStream(client.getInputStream());
         outputStream = new DataOutputStream(client.getOutputStream());
     }
-
+    
+    public void tellClientId() throws IOException {
+        lastClientId++;
+        System.out.println("Sending ID " + lastClientId + " to client");
+        outputStream.writeInt(lastClientId);
+    }
+    
     public void tellClientRole() throws IOException {
         System.out.println("This needs a sender? " + needsSender);
         outputStream.writeBoolean(needsSender);
