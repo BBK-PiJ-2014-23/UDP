@@ -4,12 +4,15 @@ import java.net.*;
 public class Client
 {
     private static final String SERVER_IP = "127.0.0.1";
+    private static final String SERVER_NAME = "localhost";
     private static final int SERVER_PORT = 2000;
+    
+    private static final String MULTICAST_ADDRESS = "224.0.0.3";
+    private static final int MULTICAST_PORT = 8888;
 
     private Socket socket;
 
     private DatagramSocket datagramSocket;
-    InetAddress ip;
 
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
@@ -17,9 +20,7 @@ public class Client
     private int clientId;
     private boolean isSender;
 
-    String test;
-
-    public Client() {
+    public Client() throws UnknownHostException, IOException {
         isSender = false;
     }
 
@@ -42,7 +43,6 @@ public class Client
         System.out.println("Successfully connected via port " + socket.getLocalPort());
         datagramSocket = new DatagramSocket();
         System.out.println("Connected via UDP on port " + datagramSocket.getLocalPort());
-        ip = InetAddress.getByName(SERVER_IP);
     }
 
     public void setupStreams() throws IOException {
@@ -61,16 +61,24 @@ public class Client
     }
 
     public void sendData() throws IOException {
-        byte[] test = Integer.toString(clientId).getBytes();
-        DatagramPacket packetToServer = new DatagramPacket(test, test.length, ip, 2000);
+        byte[] data = Integer.toString(clientId).getBytes();
+        InetAddress address = InetAddress.getByName(SERVER_NAME);
+        
+        DatagramPacket packetToServer = new DatagramPacket(data, data.length, address, 2000);
         datagramSocket.send(packetToServer);
     }
 
     public void recieveData() throws IOException {
-        byte[] data = new byte[2];
+        InetAddress address = InetAddress.getByName(MULTICAST_ADDRESS);
+        MulticastSocket clientSocket = new MulticastSocket(MULTICAST_PORT);
+        clientSocket.joinGroup(address);
+        
+        byte[] data = new byte[8];
         DatagramPacket packetFromServer = new DatagramPacket(data, data.length);
-        datagramSocket.receive(packetFromServer);
-        test = new String(packetFromServer.getData());
-        System.out.println("Recieved test data from server via client " + test);
+        
+        clientSocket.receive(packetFromServer);
+        
+        String test = new String(packetFromServer.getData());
+        System.out.println("Recieved client " + test + "test data from server");
     }
 }
