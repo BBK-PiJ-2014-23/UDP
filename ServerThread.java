@@ -3,7 +3,9 @@ import java.net.*;
 
 public class ServerThread extends Thread
 {
-    private static final int PORT = 2000;
+    private static final int RECIEVER_PORT = 2000;
+    private static final String MULTICAST_ADDRESS = "224.0.0.3";
+    private static final int MULTICAST_PORT = 8888;
 
     private Socket client;
 
@@ -16,10 +18,11 @@ public class ServerThread extends Thread
     private int clientId;
     private boolean needsSender;
 
-    String test;
+    private Server server;
 
-    public ServerThread(Socket client, int clientId, boolean needsSender) throws IOException {
+    public ServerThread(Server server, Socket client, int clientId, boolean needsSender) throws IOException {
         super();
+        this.server = server;
         this.client = client;
         this.clientId = clientId;
         this.needsSender = needsSender;
@@ -27,15 +30,15 @@ public class ServerThread extends Thread
 
     @Override
     public void run() {
+        setupStreams();
+        tellClientId();
+        tellClientRole();
+
         while(true) {
-            setupStreams();
-            tellClientId();
-            tellClientRole();
             if (needsSender) {
                 recieveData();
-            } else {
-                sendData();
             }
+            sendData();
         }
     }
 
@@ -43,7 +46,6 @@ public class ServerThread extends Thread
         try {
             inputStream = new DataInputStream(client.getInputStream());
             outputStream = new DataOutputStream(client.getOutputStream());
-            datagramSocket = new DatagramSocket(2000);
         } catch (IOException io) {}
     }
 
@@ -63,21 +65,28 @@ public class ServerThread extends Thread
 
     public void recieveData() {
         try {
-            byte[] data = new byte[2];
+            datagramSocket = new DatagramSocket(RECIEVER_PORT);
+            
+            byte[] data = new byte[8];
             packetFromClient = new DatagramPacket(data, data.length);
+            
             datagramSocket.receive(packetFromClient);
-            test = new String(packetFromClient.getData());
-            System.out.println("Recieved test data from client " + test);
+            server.storeData(new String(packetFromClient.getData()));
+            
+            System.out.println("Recieved test data from client " + server.getData());
         } catch (IOException io) {}
     }
 
     public void sendData() {
         try {
-            InetAddress ip = packetFromClient.getAddress();
-            int port = packetFromClient.getPort();
-            byte[] data = test.getBytes();
-            DatagramPacket packetToClient = new DatagramPacket(data, data.length, ip, port);
-            datagramSocket.send(packetToClient);
+            InetAddress addr = InetAddress.getByName(MULTICAST_ADDRESS);
+            DatagramSocket serverSocket = new DatagramSocket();
+            
+            byte[] data = server.getData().getBytes();
+            DatagramPacket packetToClient = new DatagramPacket(data, data.length, addr, MULTICAST_PORT);
+            
+            serverSocket.send(packetToClient);
+            System.out.println("Sent test data from client " + server.getData() + " to client " + clientId);
         } catch (IOException io) {}
     }
 }
