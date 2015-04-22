@@ -81,23 +81,34 @@ public class Client
         }
     }
 
-    public void recieveData() throws IOException {
-        InetAddress address = InetAddress.getByName(MULTICAST_ADDRESS);
-        MulticastSocket clientSocket = new MulticastSocket(MULTICAST_PORT);
-        clientSocket.joinGroup(address);
+    public void recieveData() {
+        InetAddress address = null;
+        try {
+            address = InetAddress.getByName(MULTICAST_ADDRESS);
+        } catch (UnknownHostException host) {
+            System.out.println("!!!!! UnknownHostException in recieveData() !!!!!");
+        }
+        
+        MulticastSocket clientSocket = null;
+        DatagramPacket packetFromServer = null;
+        
+        try {
+            clientSocket = new MulticastSocket(MULTICAST_PORT);
+            clientSocket.joinGroup(address);
 
-        byte[] data = new byte[2];
-        //while(true) {
-            DatagramPacket packetFromServer = new DatagramPacket(data, data.length);
+            byte[] data = new byte[2];
+            packetFromServer = new DatagramPacket(data, data.length);
 
             clientSocket.receive(packetFromServer);
-
-            String test = new String(packetFromServer.getData());
-            System.out.println("Recieved client " + test + "test data from server");
-        //}
-    }
-    
-    public void playAudio() {
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in recieveData() !!!!!");
+        }
         
+        String test = new String(packetFromServer.getData());
+        System.out.println("Recieved client " + test + "test data from server");
+    }
+
+    public void playAudio() {
+
     }
 }
