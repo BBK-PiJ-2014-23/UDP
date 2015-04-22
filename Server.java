@@ -27,7 +27,7 @@ public class Server
         queue = new LinkedList<ServerThread>();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Server server = new Server();
         while(true) {
             server.listen();
