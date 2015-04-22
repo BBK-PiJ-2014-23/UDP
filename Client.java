@@ -49,7 +49,7 @@ public class Client
             datagramSocket = new DatagramSocket();
             System.out.println("Connected via UDP on port " + datagramSocket.getLocalPort());
         } catch (UnknownHostException host) {
-            System.out.println("IP address of host could not be determined. Trying again...");
+            System.out.println("!!!!! UnknownHostException in connect() !!!!!");
             connect();
         } catch (IOException io) {
             System.out.println("Server unavailable. Trying again...");
