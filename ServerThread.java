@@ -101,4 +101,8 @@ public class ServerThread extends Thread
             } catch (InterruptedException interrupt) {}
         } catch (IOException io) {}
     }
+    
+    public void setToSender() {
+        connectedToSender = true;
+    }
 }
