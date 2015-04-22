@@ -67,8 +67,12 @@ public class Client
         System.out.println("Recieved client id from server is " + clientId);
     }
 
-    public void acceptRole() throws IOException {
-        isSender = inputStream.readBoolean();
+    public void acceptRole() {
+        try {
+            isSender = inputStream.readBoolean();
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in acceptRole() !!!!!");
+        }
         System.out.println("Client is a sender? " + isSender);
     }
 
@@ -79,7 +83,7 @@ public class Client
         } catch (UnknownHostException host) {
             System.out.println("!!!!! UnknownHostException in sendData() !!!!!");
         }
-        
+
         byte[] data = Integer.toString(clientId).getBytes();
         while(true) {
             DatagramPacket packetToServer = new DatagramPacket(data, data.length, address, 2000);
