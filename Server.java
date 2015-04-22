@@ -16,8 +16,12 @@ public class Server
 
     private String test = "";
 
-    public Server() throws IOException {
-        socket = new ServerSocket(PORT);
+    public Server() {
+        try {
+            socket = new ServerSocket(PORT);
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in Server() !!!!!");
+        }
         lastClientId = 0;
         needsSender = true;
         queue = new LinkedList<ServerThread>();
