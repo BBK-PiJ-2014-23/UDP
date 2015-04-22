@@ -40,10 +40,15 @@ public class Client
 
     public void connect() throws UnknownHostException, IOException {
         System.out.println("Connecting to server...");
-        socket = new Socket(SERVER_IP, SERVER_PORT);
-        System.out.println("Successfully connected via port " + socket.getLocalPort());
-        datagramSocket = new DatagramSocket();
-        System.out.println("Connected via UDP on port " + datagramSocket.getLocalPort());
+        try {
+            socket = new Socket(SERVER_IP, SERVER_PORT);
+            System.out.println("Successfully connected via port " + socket.getLocalPort());
+            datagramSocket = new DatagramSocket();
+            System.out.println("Connected via UDP on port " + datagramSocket.getLocalPort());
+        } catch (ConnectException connect) {
+            System.out.println("Server unavailable. Trying again...");
+            connect();
+        }
     }
 
     public void setupStreams() throws IOException {
