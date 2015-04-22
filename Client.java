@@ -72,12 +72,21 @@ public class Client
         System.out.println("Client is a sender? " + isSender);
     }
 
-    public void sendData() throws IOException {
+    public void sendData() {
         byte[] data = Integer.toString(clientId).getBytes();
-        InetAddress address = InetAddress.getByName(SERVER_NAME);
+        InetAddress address = null;
+        try {
+            address = InetAddress.getByName(SERVER_NAME);
+        } catch (UnknownHostException host) {
+            System.out.println("!!!!! UnknownHostException in sendData() !!!!!");
+        }
         while(true) {
             DatagramPacket packetToServer = new DatagramPacket(data, data.length, address, 2000);
-            datagramSocket.send(packetToServer);
+            try {
+                datagramSocket.send(packetToServer);
+            } catch (IOException io) {
+                System.out.println("!!!!! IOException in sendData() !!!!!");
+            }
         }
     }
 
@@ -88,10 +97,10 @@ public class Client
         } catch (UnknownHostException host) {
             System.out.println("!!!!! UnknownHostException in recieveData() !!!!!");
         }
-        
+
         MulticastSocket clientSocket = null;
         DatagramPacket packetFromServer = null;
-        
+
         try {
             clientSocket = new MulticastSocket(MULTICAST_PORT);
             clientSocket.joinGroup(address);
@@ -103,7 +112,7 @@ public class Client
         } catch (IOException io) {
             System.out.println("!!!!! IOException in recieveData() !!!!!");
         }
-        
+
         String test = new String(packetFromServer.getData());
         System.out.println("Recieved client " + test + "test data from server");
     }
