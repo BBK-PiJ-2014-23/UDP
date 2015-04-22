@@ -31,10 +31,13 @@ public class Client
         client.acceptClientId();
         client.acceptRole();
 
-        if (client.isSender) {
-            client.sendData();
-        } else {
-            client.recieveData();
+        while(true) {
+            if (client.isSender) {
+                client.sendData();
+            } else {
+                client.recieveData();
+                client.playAudio();
+            }
         }
     }
 
@@ -92,5 +95,9 @@ public class Client
             String test = new String(packetFromServer.getData());
             System.out.println("Recieved client " + test + "test data from server");
         }
+    }
+    
+    public void playAudio() {
+        
     }
 }
