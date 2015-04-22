@@ -32,12 +32,15 @@ public class ServerThread extends Thread
     public void run() {
         setupStreams();
         tellClientId();
-        tellClientRole();
+        
 
-        if (connectedToSender) {
-            recieveData();
-        } else {
-            sendData();
+        while(true) {
+            tellClientRole();
+            if (connectedToSender) {
+                recieveData();
+            } else {
+                sendData();
+            }
         }
     }
 
@@ -57,7 +60,7 @@ public class ServerThread extends Thread
 
     public void tellClientRole() {
         try  {
-            System.out.println("This needs a sender? " + connectedToSender);
+            //System.out.println("This needs a sender? " + connectedToSender);
             outputStream.writeBoolean(connectedToSender);
         } catch (IOException io) {}
     }
@@ -75,6 +78,7 @@ public class ServerThread extends Thread
                 server.storeData(new String(packetFromClient.getData()));
 
                 System.out.println("Recieved test data from client " + server.getData());
+                break;
             }
         } catch (IOException io) {}
     }
@@ -86,12 +90,15 @@ public class ServerThread extends Thread
 
             byte[] data = server.getData().getBytes();
 
-            while(true) {
+            //while(true) {
                 DatagramPacket packetToClient = new DatagramPacket(data, data.length, addr, MULTICAST_PORT);
 
                 serverSocket.send(packetToClient);
                 System.out.println("Sent test data from client " + server.getData() + " to client " + clientId);
-            }
+            //}
+            try {
+                this.sleep(2000);
+            } catch (InterruptedException interrupt) {}
         } catch (IOException io) {}
     }
 }
