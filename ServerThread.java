@@ -20,7 +20,7 @@ public class ServerThread extends Thread
 
     private Server server;
 
-    public ServerThread(Server server, Socket client, int clientId, boolean connectedToSender) throws IOException {
+    public ServerThread(Server server, Socket client, int clientId, boolean connectedToSender) {
         super();
         this.server = server;
         this.client = client;
