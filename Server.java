@@ -43,12 +43,7 @@ public class Server
         }
         System.out.println("Client connected on port " + client.getPort());
         lastClientId++;
-        ServerThread thread = null;
-        try {
-            thread = new ServerThread(this, client, lastClientId, needsSender);
-        } catch (IOException io) {
-            System.out.println("!!!!! IOException in listen() !!!!!");
-        }
+        ServerThread thread = new ServerThread(this, client, lastClientId, needsSender);
         thread.start();
         if (needsSender) {
             needsSender = false;
