@@ -38,14 +38,17 @@ public class Client
         }
     }
 
-    public void connect() throws UnknownHostException, IOException {
+    public void connect() {
         System.out.println("Connecting to server...");
         try {
             socket = new Socket(SERVER_IP, SERVER_PORT);
             System.out.println("Successfully connected via port " + socket.getLocalPort());
             datagramSocket = new DatagramSocket();
             System.out.println("Connected via UDP on port " + datagramSocket.getLocalPort());
-        } catch (ConnectException connect) {
+        } catch (UnknownHostException host) {
+            System.out.println("IP address of host could not be determined. Trying again...");
+            connect();
+        } catch (IOException io) {
             System.out.println("Server unavailable. Trying again...");
             connect();
         }
