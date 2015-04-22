@@ -54,7 +54,9 @@ public class ServerThread extends Thread
         try {
             System.out.println("Sending ID " + clientId + " to client");
             outputStream.writeInt(clientId);
-        } catch (IOException io) {}
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in tellClientId() !!!!!");
+        }
     }
 
     public void tellClientRole() {
