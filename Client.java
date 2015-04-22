@@ -62,8 +62,12 @@ public class Client
         outputStream = new DataOutputStream(socket.getOutputStream());
     }
 
-    public void acceptClientId() throws IOException {
-        clientId = inputStream.readInt();
+    public void acceptClientId() {
+        try {
+            clientId = inputStream.readInt();
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in acceptClientId() !!!!!");
+        }
         System.out.println("Recieved client id from server is " + clientId);
     }
 
