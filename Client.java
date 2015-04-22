@@ -57,9 +57,13 @@ public class Client
         }
     }
 
-    public void setupStreams() throws IOException {
-        inputStream = new DataInputStream(socket.getInputStream());
-        outputStream = new DataOutputStream(socket.getOutputStream());
+    public void setupStreams() {
+        try {
+            inputStream = new DataInputStream(socket.getInputStream());
+            outputStream = new DataOutputStream(socket.getOutputStream());
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in setupStreams() !!!!!");
+        }
     }
 
     public void acceptClientId() {
