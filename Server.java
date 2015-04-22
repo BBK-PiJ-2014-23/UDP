@@ -69,6 +69,8 @@ public class Server
         if (queue.size() > 0) {
             ServerThread thread = queue.remove();
             thread.setToSender();
+        } else {
+            needsSender = true;
         }
     }
 }
