@@ -61,7 +61,9 @@ public class ServerThread extends Thread
         try  {
             //System.out.println("This needs a sender? " + connectedToSender);
             outputStream.writeBoolean(connectedToSender);
-        } catch (IOException io) {}
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in tellClientRole() !!!!!");
+        }
     }
 
     public void recieveData() {
