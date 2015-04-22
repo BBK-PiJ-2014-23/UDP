@@ -29,9 +29,9 @@ public class Client
         client.connect();
         client.setupStreams();
         client.acceptClientId();
-        client.acceptRole();
 
         while(true) {
+            client.acceptRole();
             if (client.isSender) {
                 client.sendData();
             } else {
