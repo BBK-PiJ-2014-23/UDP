@@ -20,9 +20,10 @@ public class ServerThread extends Thread
 
     private Server server;
 
-    public ServerThread(Server server, Socket client, int clientId, boolean connectedToSender) {
+    public ServerThread(Server server, DatagramSocket datagramSocket, Socket client, int clientId, boolean connectedToSender) {
         super();
         this.server = server;
+        this.datagramSocket = datagramSocket;
         this.client = client;
         this.clientId = clientId;
         this.connectedToSender = connectedToSender;
@@ -71,12 +72,6 @@ public class ServerThread extends Thread
     }
 
     public void recieveData() {
-        try {
-            datagramSocket = new DatagramSocket(RECIEVER_PORT);
-        } catch (SocketException socket) {
-            System.out.println("!!!!! SocketException in recieveData() !!!!!");
-        }
-
         byte[] data = new byte[2];
 
         while(true) {
