@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class Server
 {
@@ -11,12 +12,15 @@ public class Server
     private int lastClientId;
     private boolean needsSender;
     
+    private Queue<ServerThread> queue;
+    
     private String test = "";
 
     public Server() throws IOException {
         socket = new ServerSocket(PORT);
         lastClientId = 0;
         needsSender = true;
+        queue = new LinkedList<ServerThread>();
     }
 
     public static void main(String[] args) throws IOException {
@@ -31,9 +35,12 @@ public class Server
         client = socket.accept();
         System.out.println("Client connected on port " + client.getPort());
         lastClientId++;
-        (new ServerThread(this, client, lastClientId, needsSender)).start();
+        ServerThread thread = new ServerThread(this, client, lastClientId, needsSender);
+        thread.start();
         if (needsSender) {
             needsSender = false;
+        } else {
+            queue.add(thread);
         }
     }
     
