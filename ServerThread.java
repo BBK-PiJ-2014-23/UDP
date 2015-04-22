@@ -47,7 +47,9 @@ public class ServerThread extends Thread
         try {
             inputStream = new DataInputStream(client.getInputStream());
             outputStream = new DataOutputStream(client.getOutputStream());
-        } catch (IOException io) {}
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in setupStreams() !!!!!");
+        }
     }
 
     public void tellClientId() {
