@@ -6,7 +6,7 @@ public class Client
     private static final String SERVER_IP = "127.0.0.1";
     private static final String SERVER_NAME = "localhost";
     private static final int SERVER_PORT = 2000;
-    
+
     private static final String MULTICAST_ADDRESS = "224.0.0.3";
     private static final int MULTICAST_PORT = 8888;
 
@@ -30,6 +30,7 @@ public class Client
         client.setupStreams();
         client.acceptClientId();
         client.acceptRole();
+
         if (client.isSender) {
             client.sendData();
         } else {
@@ -63,22 +64,25 @@ public class Client
     public void sendData() throws IOException {
         byte[] data = Integer.toString(clientId).getBytes();
         InetAddress address = InetAddress.getByName(SERVER_NAME);
-        
-        DatagramPacket packetToServer = new DatagramPacket(data, data.length, address, 2000);
-        datagramSocket.send(packetToServer);
+        while(true) {
+            DatagramPacket packetToServer = new DatagramPacket(data, data.length, address, 2000);
+            datagramSocket.send(packetToServer);
+        }
     }
 
     public void recieveData() throws IOException {
         InetAddress address = InetAddress.getByName(MULTICAST_ADDRESS);
         MulticastSocket clientSocket = new MulticastSocket(MULTICAST_PORT);
         clientSocket.joinGroup(address);
-        
-        byte[] data = new byte[8];
-        DatagramPacket packetFromServer = new DatagramPacket(data, data.length);
-        
-        clientSocket.receive(packetFromServer);
-        
-        String test = new String(packetFromServer.getData());
-        System.out.println("Recieved client " + test + "test data from server");
+
+        byte[] data = new byte[2];
+        while(true) {
+            DatagramPacket packetFromServer = new DatagramPacket(data, data.length);
+
+            clientSocket.receive(packetFromServer);
+
+            String test = new String(packetFromServer.getData());
+            System.out.println("Recieved client " + test + "test data from server");
+        }
     }
 }
