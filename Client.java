@@ -87,14 +87,14 @@ public class Client
         clientSocket.joinGroup(address);
 
         byte[] data = new byte[2];
-        while(true) {
+        //while(true) {
             DatagramPacket packetFromServer = new DatagramPacket(data, data.length);
 
             clientSocket.receive(packetFromServer);
 
             String test = new String(packetFromServer.getData());
             System.out.println("Recieved client " + test + "test data from server");
-        }
+        //}
     }
     
     public void playAudio() {
