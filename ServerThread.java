@@ -32,7 +32,6 @@ public class ServerThread extends Thread
     public void run() {
         setupStreams();
         tellClientId();
-        
 
         while(true) {
             tellClientRole();
@@ -84,24 +83,36 @@ public class ServerThread extends Thread
     }
 
     public void sendData() {
+        InetAddress addr = null;
         try {
-            InetAddress addr = InetAddress.getByName(MULTICAST_ADDRESS);
-            DatagramSocket serverSocket = new DatagramSocket();
+            addr = InetAddress.getByName(MULTICAST_ADDRESS);
+        } catch (UnknownHostException host) {
+            System.out.println("!!!!! UnknownHostException in sendData() !!!!!");
+        }
+        DatagramSocket serverSocket = null;
+        try {
+            serverSocket = new DatagramSocket();
+        } catch (SocketException socket) {
+            System.out.println("!!!!! SocketException in sendData() !!!!!");
+        }
 
-            byte[] data = server.getData().getBytes();
+        byte[] data = server.getData().getBytes();
 
-            //while(true) {
-                DatagramPacket packetToClient = new DatagramPacket(data, data.length, addr, MULTICAST_PORT);
-
-                serverSocket.send(packetToClient);
-                System.out.println("Sent test data from client " + server.getData() + " to client " + clientId);
-            //}
-            try {
-                this.sleep(2000);
-            } catch (InterruptedException interrupt) {}
-        } catch (IOException io) {}
+        //while(true) {
+        DatagramPacket packetToClient = new DatagramPacket(data, data.length, addr, MULTICAST_PORT);
+        try {
+            serverSocket.send(packetToClient);
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in sendData() !!!!!");
+        }
+        System.out.println("Sent test data from client " + server.getData() + " to client " + clientId);
+        //}
+        try {
+            this.sleep(2000);
+        } catch (InterruptedException interrupt) {}
+        //} catch (IOException io) {}
     }
-    
+
     public void setToSender() {
         connectedToSender = true;
     }
