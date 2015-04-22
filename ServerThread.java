@@ -37,8 +37,9 @@ public class ServerThread extends Thread
         while(true) {
             if (needsSender) {
                 recieveData();
+            } else {
+                sendData();
             }
-            sendData();
         }
     }
 
@@ -66,13 +67,13 @@ public class ServerThread extends Thread
     public void recieveData() {
         try {
             datagramSocket = new DatagramSocket(RECIEVER_PORT);
-            
+
             byte[] data = new byte[8];
             packetFromClient = new DatagramPacket(data, data.length);
-            
+
             datagramSocket.receive(packetFromClient);
             server.storeData(new String(packetFromClient.getData()));
-            
+
             System.out.println("Recieved test data from client " + server.getData());
         } catch (IOException io) {}
     }
@@ -81,10 +82,10 @@ public class ServerThread extends Thread
         try {
             InetAddress addr = InetAddress.getByName(MULTICAST_ADDRESS);
             DatagramSocket serverSocket = new DatagramSocket();
-            
+
             byte[] data = server.getData().getBytes();
             DatagramPacket packetToClient = new DatagramPacket(data, data.length, addr, MULTICAST_PORT);
-            
+
             serverSocket.send(packetToClient);
             System.out.println("Sent test data from client " + server.getData() + " to client " + clientId);
         } catch (IOException io) {}
