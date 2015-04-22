@@ -22,6 +22,7 @@ public class Server
         try {
             socket = new ServerSocket(PORT);
             datagramSocket = new DatagramSocket(PORT);
+            datagramSocket.setSoTimeout(1000);
         } catch (IOException io) {
             System.out.println("!!!!! IOException in Server() !!!!!");
         }
