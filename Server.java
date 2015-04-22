@@ -7,8 +7,10 @@ public class Server
     private static final int PORT = 2000;
 
     private ServerSocket socket;
+    private DatagramSocket datagramSocket;
+    
     private Socket client;
-
+    
     private int lastClientId;
     private boolean needsSender;
 
@@ -19,6 +21,7 @@ public class Server
     public Server() {
         try {
             socket = new ServerSocket(PORT);
+            datagramSocket = new DatagramSocket(PORT);
         } catch (IOException io) {
             System.out.println("!!!!! IOException in Server() !!!!!");
         }
@@ -43,7 +46,7 @@ public class Server
         }
         System.out.println("Client connected on port " + client.getPort());
         lastClientId++;
-        ServerThread thread = new ServerThread(this, client, lastClientId, needsSender);
+        ServerThread thread = new ServerThread(this, datagramSocket, client, lastClientId, needsSender);
         thread.start();
         if (needsSender) {
             needsSender = false;
