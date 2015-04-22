@@ -51,4 +51,9 @@ public class Server
     public String getData() {
         return test;
     }
+    
+    public void requestNewSender() {
+        ServerThread thread = queue.remove();
+        thread.setToSender();
+    }
 }
