@@ -16,16 +16,16 @@ public class ServerThread extends Thread
     private DatagramPacket packetFromClient;
 
     private int clientId;
-    private boolean needsSender;
+    private boolean connectedToSender;
 
     private Server server;
 
-    public ServerThread(Server server, Socket client, int clientId, boolean needsSender) throws IOException {
+    public ServerThread(Server server, Socket client, int clientId, boolean connectedToSender) throws IOException {
         super();
         this.server = server;
         this.client = client;
         this.clientId = clientId;
-        this.needsSender = needsSender;
+        this.connectedToSender = connectedToSender;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ServerThread extends Thread
         tellClientRole();
 
         while(true) {
-            if (needsSender) {
+            if (connectedToSender) {
                 recieveData();
             } else {
                 sendData();
@@ -59,8 +59,8 @@ public class ServerThread extends Thread
 
     public void tellClientRole() {
         try  {
-            System.out.println("This needs a sender? " + needsSender);
-            outputStream.writeBoolean(needsSender);
+            System.out.println("This needs a sender? " + connectedToSender);
+            outputStream.writeBoolean(connectedToSender);
         } catch (IOException io) {}
     }
 
