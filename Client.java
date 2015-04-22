@@ -73,13 +73,14 @@ public class Client
     }
 
     public void sendData() {
-        byte[] data = Integer.toString(clientId).getBytes();
         InetAddress address = null;
         try {
             address = InetAddress.getByName(SERVER_NAME);
         } catch (UnknownHostException host) {
             System.out.println("!!!!! UnknownHostException in sendData() !!!!!");
         }
+        
+        byte[] data = Integer.toString(clientId).getBytes();
         while(true) {
             DatagramPacket packetToServer = new DatagramPacket(data, data.length, address, 2000);
             try {
