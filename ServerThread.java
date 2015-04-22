@@ -34,12 +34,10 @@ public class ServerThread extends Thread
         tellClientId();
         tellClientRole();
 
-        while(true) {
-            if (connectedToSender) {
-                recieveData();
-            } else {
-                sendData();
-            }
+        if (connectedToSender) {
+            recieveData();
+        } else {
+            sendData();
         }
     }
 
@@ -68,13 +66,16 @@ public class ServerThread extends Thread
         try {
             datagramSocket = new DatagramSocket(RECIEVER_PORT);
 
-            byte[] data = new byte[8];
-            packetFromClient = new DatagramPacket(data, data.length);
+            byte[] data = new byte[2];
 
-            datagramSocket.receive(packetFromClient);
-            server.storeData(new String(packetFromClient.getData()));
+            while(true) {
+                packetFromClient = new DatagramPacket(data, data.length);
 
-            System.out.println("Recieved test data from client " + server.getData());
+                datagramSocket.receive(packetFromClient);
+                server.storeData(new String(packetFromClient.getData()));
+
+                System.out.println("Recieved test data from client " + server.getData());
+            }
         } catch (IOException io) {}
     }
 
@@ -84,10 +85,13 @@ public class ServerThread extends Thread
             DatagramSocket serverSocket = new DatagramSocket();
 
             byte[] data = server.getData().getBytes();
-            DatagramPacket packetToClient = new DatagramPacket(data, data.length, addr, MULTICAST_PORT);
 
-            serverSocket.send(packetToClient);
-            System.out.println("Sent test data from client " + server.getData() + " to client " + clientId);
+            while(true) {
+                DatagramPacket packetToClient = new DatagramPacket(data, data.length, addr, MULTICAST_PORT);
+
+                serverSocket.send(packetToClient);
+                System.out.println("Sent test data from client " + server.getData() + " to client " + clientId);
+            }
         } catch (IOException io) {}
     }
 }
