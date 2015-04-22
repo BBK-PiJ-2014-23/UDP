@@ -20,11 +20,11 @@ public class Client
     private int clientId;
     private boolean isSender;
 
-    public Client() throws UnknownHostException, IOException {
+    public Client() {
         isSender = false;
     }
 
-    public static void main(String[] args) throws UnknownHostException, IOException {
+    public static void main(String[] args) {
         Client client = new Client();
         client.connect();
         client.setupStreams();
