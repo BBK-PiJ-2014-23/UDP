@@ -30,12 +30,21 @@ public class Server
         }
     }
 
-    public void listen() throws IOException {
+    public void listen() {
         //System.out.println("Server listening on port " + socket.getLocalPort());
-        client = socket.accept();
+        try {
+            client = socket.accept();
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in listen() !!!!!");
+        }
         System.out.println("Client connected on port " + client.getPort());
         lastClientId++;
-        ServerThread thread = new ServerThread(this, client, lastClientId, needsSender);
+        ServerThread thread = null;
+        try {
+            thread = new ServerThread(this, client, lastClientId, needsSender);
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in listen() !!!!!");
+        }
         thread.start();
         if (needsSender) {
             needsSender = false;
