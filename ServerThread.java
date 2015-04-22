@@ -67,19 +67,25 @@ public class ServerThread extends Thread
     public void recieveData() {
         try {
             datagramSocket = new DatagramSocket(RECIEVER_PORT);
+        } catch (SocketException socket) {
+            System.out.println("!!!!! SocketException in recieveData() !!!!!");
+        }
 
-            byte[] data = new byte[2];
+        byte[] data = new byte[2];
 
-            while(true) {
-                packetFromClient = new DatagramPacket(data, data.length);
+        while(true) {
+            packetFromClient = new DatagramPacket(data, data.length);
 
+            try{
                 datagramSocket.receive(packetFromClient);
-                server.storeData(new String(packetFromClient.getData()));
-
-                System.out.println("Recieved test data from client " + server.getData());
-                break;
+            } catch (IOException io) {
+                System.out.println("!!!!! IOException in recieveData() !!!!!");
             }
-        } catch (IOException io) {}
+            server.storeData(new String(packetFromClient.getData()));
+
+            System.out.println("Recieved test data from client " + server.getData());
+            break;
+        }
     }
 
     public void sendData() {
@@ -97,7 +103,6 @@ public class ServerThread extends Thread
         }
 
         byte[] data = server.getData().getBytes();
-
         //while(true) {
         DatagramPacket packetToClient = new DatagramPacket(data, data.length, addr, MULTICAST_PORT);
         try {
@@ -110,7 +115,6 @@ public class ServerThread extends Thread
         try {
             this.sleep(2000);
         } catch (InterruptedException interrupt) {}
-        //} catch (IOException io) {}
     }
 
     public void setToSender() {
