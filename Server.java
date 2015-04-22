@@ -11,9 +11,9 @@ public class Server
 
     private int lastClientId;
     private boolean needsSender;
-    
+
     private Queue<ServerThread> queue;
-    
+
     private String test = "";
 
     public Server() throws IOException {
@@ -43,17 +43,20 @@ public class Server
             queue.add(thread);
         }
     }
-    
+
     public void storeData(String input) {
         test = input;
+        System.out.println("Test contains: " + test);
     }
-    
+
     public String getData() {
         return test;
     }
-    
+
     public void requestNewSender() {
-        ServerThread thread = queue.remove();
-        thread.setToSender();
+        if (queue.size() > 0) {
+            ServerThread thread = queue.remove();
+            thread.setToSender();
+        }
     }
 }
