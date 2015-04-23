@@ -58,7 +58,6 @@ public class Server
 
     public void storeData(String input) {
         test = input;
-        System.out.println("Test contains: " + test);
     }
 
     public String getData() {
