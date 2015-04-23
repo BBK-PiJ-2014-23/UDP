@@ -33,7 +33,7 @@ public class ServerThread extends Thread
     public void run() {
         setupStreams();
         tellClientId();
-
+        
         while(true) {
             tellClientRole();
             if (connectedToSender) {
@@ -73,7 +73,7 @@ public class ServerThread extends Thread
 
     public void recieveData() {
         byte[] data = new byte[2];
-
+        System.out.println("Recieved test data from client " + server.getData());
         while(true) {
             packetFromClient = new DatagramPacket(data, data.length);
 
@@ -87,8 +87,6 @@ public class ServerThread extends Thread
                 System.out.println("!!!!! IOException in recieveData() !!!!!");
             }
             server.storeData(new String(packetFromClient.getData()));
-
-            System.out.println("Recieved test data from client " + server.getData());
             break;
         }
     }
