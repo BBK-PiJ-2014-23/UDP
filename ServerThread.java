@@ -79,6 +79,7 @@ public class ServerThread extends Thread
 
             try{
                 datagramSocket.receive(packetFromClient);
+                server.storeData(new String(packetFromClient.getData()));
             } catch (SocketTimeoutException timeout) {
                 System.out.println("Sender timeout.");
                 connectedToSender = false;
@@ -86,7 +87,7 @@ public class ServerThread extends Thread
             } catch (IOException io) {
                 System.out.println("!!!!! IOException in recieveData() !!!!!");
             }
-            server.storeData(new String(packetFromClient.getData()));
+            //server.storeData(new String(packetFromClient.getData()));
             break;
         }
     }
