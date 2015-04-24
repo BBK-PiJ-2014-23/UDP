@@ -24,16 +24,9 @@ public class Server
     private String test = "";
 
     public Server() {
-        try {
-            socket = new ServerSocket(PORT);
-            datagramSocket = new DatagramSocket(PORT);
-            datagramSocket.setSoTimeout(1000);
-        } catch (IOException io) {
-            System.out.println("!!!!! IOException in Server() !!!!!");
-        }
         lastClientId = 0;
         needsSender = true;
-        queue = new LinkedList<ServerThread>();
+        clientThreads = new PriorityBlockingQueue<ClientThread>();
     }
 
     public void listen() {
