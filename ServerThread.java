@@ -3,7 +3,6 @@ import java.net.*;
 
 public class ServerThread extends Thread
 {
-    private static final int RECIEVER_PORT = 2000;
     private static final String MULTICAST_ADDRESS = "224.0.0.3";
     private static final int MULTICAST_PORT = 8888;
 
