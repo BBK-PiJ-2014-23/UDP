@@ -120,7 +120,7 @@ public class Server
     }
     
     public static void main(String[] args) {
-        Server2 server = new Server2();
+        Server server = new Server();
         server.launch();
     }
 }
