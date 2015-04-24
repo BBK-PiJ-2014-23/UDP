@@ -1,21 +1,26 @@
 import java.io.*;
 import java.net.*;
-import java.util.*;
+import java.util.concurrent.*;
 
 public class Server
 {
     private static final int PORT = 2000;
+    private static final String MULTICAST_IP = "224.0.0.3";
+    private static final int MULTICAST_PORT = 8888;
 
-    private ServerSocket socket;
-    private DatagramSocket datagramSocket;
-    
-    private Socket client;
-    
+    //constructor
     private int lastClientId;
     private boolean needsSender;
+    private BlockingQueue<ClientThread> clientThreads;
 
-    private Queue<ServerThread> queue;
+    //launch()
+    private ServerSocket serverSocket;
+    private DatagramSocket senderClientSocket;
+    private InetAddress multicastAddress;
+    private DatagramSocket multicastSocket;
+    private ListenerThread listenerThread;
 
+    //test
     private String test = "";
 
     public Server() {
