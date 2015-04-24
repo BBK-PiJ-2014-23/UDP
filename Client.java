@@ -55,6 +55,8 @@ public class Client
             System.out.println("Connected via UDP on port " + datagramSocket.getLocalPort());
             serverAddress = InetAddress.getByName(SERVER_NAME);
             multicastAddress = InetAddress.getByName(MULTICAST_IP);
+            multicastSocket = new MulticastSocket(MULTICAST_PORT);
+            multicastSocket.joinGroup(multicastAddress);
         } catch (UnknownHostException host) {
             System.out.println("!!!!! UnknownHostException in connect() !!!!!");
             connect();
@@ -106,12 +108,8 @@ public class Client
     public void recieveData() {
         DatagramPacket packetFromServer = null;
         try {
-            multicastSocket = new MulticastSocket(MULTICAST_PORT);
-            multicastSocket.joinGroup(multicastAddress);
-
             byte[] data = new byte[2];
             packetFromServer = new DatagramPacket(data, data.length);
-
             multicastSocket.receive(packetFromServer);
         } catch (IOException io) {
             System.out.println("!!!!! IOException in recieveData() !!!!!");
