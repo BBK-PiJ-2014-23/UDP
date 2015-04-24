@@ -67,7 +67,7 @@ public class Server
     public void requestNewSender() {
         if (queue.size() > 0) {
             ServerThread thread = queue.remove();
-            thread.setToSender();
+            thread.makeClientSender();
         } else {
             needsSender = true;
         }
