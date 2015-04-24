@@ -6,7 +6,7 @@ public class Client
     private static final String SERVER_IP = "127.0.0.1";
     private static final int SERVER_PORT = 2000;
     private static final String SERVER_NAME = "localhost";
-    private static final String MULTICAST_ADDRESS = "224.0.0.3";
+    private static final String MULTICAST_IP = "224.0.0.3";
     private static final int MULTICAST_PORT = 8888;
     
     //constructor
@@ -23,7 +23,10 @@ public class Client
     //acceptClientId()
     private int clientId;
     
-
+    //sendData()
+    
+    
+    
     public Client() {
         isSender = false;
     }
@@ -88,16 +91,16 @@ public class Client
     }
 
     public void sendData() {
-        InetAddress address = null;
+        InetAddress serverAddress = null;
         try {
-            address = InetAddress.getByName(SERVER_NAME);
+            serverAddress = InetAddress.getByName(SERVER_NAME);
         } catch (UnknownHostException host) {
             System.out.println("!!!!! UnknownHostException in sendData() !!!!!");
         }
 
         byte[] data = Integer.toString(clientId).getBytes();
         while(true) {
-            DatagramPacket packetToServer = new DatagramPacket(data, data.length, address, 2000);
+            DatagramPacket packetToServer = new DatagramPacket(data, data.length, serverAddress, 2000);
             try {
                 datagramSocket.send(packetToServer);
             } catch (IOException io) {
@@ -107,24 +110,24 @@ public class Client
     }
 
     public void recieveData() {
-        InetAddress address = null;
+        InetAddress multicastAddress = null;
         try {
-            address = InetAddress.getByName(MULTICAST_ADDRESS);
+            multicastAddress = InetAddress.getByName(MULTICAST_IP);
         } catch (UnknownHostException host) {
             System.out.println("!!!!! UnknownHostException in recieveData() !!!!!");
         }
 
-        MulticastSocket clientSocket = null;
+        MulticastSocket multicastSocket = null;
         DatagramPacket packetFromServer = null;
 
         try {
-            clientSocket = new MulticastSocket(MULTICAST_PORT);
-            clientSocket.joinGroup(address);
+            multicastSocket = new MulticastSocket(MULTICAST_PORT);
+            multicastSocket.joinGroup(multicastAddress);
 
             byte[] data = new byte[2];
             packetFromServer = new DatagramPacket(data, data.length);
 
-            clientSocket.receive(packetFromServer);
+            multicastSocket.receive(packetFromServer);
         } catch (IOException io) {
             System.out.println("!!!!! IOException in recieveData() !!!!!");
         }
