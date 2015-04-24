@@ -67,9 +67,7 @@ public class Server
     }
 
     public static void main(String[] args) {
-        Server server = new Server();
-        while(true) {
-            server.listen();
-        }
+        Server2 server = new Server2();
+        server.launch();
     }
 }
