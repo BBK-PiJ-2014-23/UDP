@@ -6,7 +6,7 @@ public class Client
     private static final String SERVER_IP = "127.0.0.1";
     private static final String SERVER_NAME = "localhost";
     private static final int SERVER_PORT = 2000;
-
+       
     private static final String MULTICAST_ADDRESS = "224.0.0.3";
     private static final int MULTICAST_PORT = 8888;
 
@@ -23,22 +23,26 @@ public class Client
     public Client() {
         isSender = false;
     }
-
-    public static void main(String[] args) {
-        Client client = new Client();
-        client.connect();
-        client.setupStreams();
-        client.acceptClientId();
+    
+    public void launch() {
+        connect();
+        setupStreams();
+        acceptClientId();
 
         while(true) {
-            client.acceptRole();
-            if (client.isSender) {
-                client.sendData();
+            acceptRole();
+            if (isSender) {
+                sendData();
             } else {
-                client.recieveData();
-                client.playAudio();
+                recieveData();
+                playAudio();
             }
         }
+    }
+    
+    public static void main(String[] args) {
+        Client client = new Client();
+        client.launch();
     }
 
     public void connect() {
