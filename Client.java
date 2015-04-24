@@ -8,25 +8,27 @@ public class Client
     private static final String SERVER_NAME = "localhost";
     private static final String MULTICAST_IP = "224.0.0.3";
     private static final int MULTICAST_PORT = 8888;
-    
+
     //constructor
     private boolean isSender;
-    
+
     //connect()
     private Socket socket;
     private DatagramSocket datagramSocket;
-    
+
     //setupStreams()
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
-    
+
     //acceptClientId()
     private int clientId;
-    
+
     //sendData()
-    
-    
-    
+
+    //recieveData()
+    InetAddress multicastAddress;
+    MulticastSocket multicastSocket;
+
     public Client() {
         isSender = false;
     }
@@ -54,6 +56,7 @@ public class Client
             System.out.println("Successfully connected via port " + socket.getLocalPort());
             datagramSocket = new DatagramSocket();
             System.out.println("Connected via UDP on port " + datagramSocket.getLocalPort());
+            multicastAddress = InetAddress.getByName(MULTICAST_IP);
         } catch (UnknownHostException host) {
             System.out.println("!!!!! UnknownHostException in connect() !!!!!");
             connect();
@@ -110,16 +113,7 @@ public class Client
     }
 
     public void recieveData() {
-        InetAddress multicastAddress = null;
-        try {
-            multicastAddress = InetAddress.getByName(MULTICAST_IP);
-        } catch (UnknownHostException host) {
-            System.out.println("!!!!! UnknownHostException in recieveData() !!!!!");
-        }
-
-        MulticastSocket multicastSocket = null;
         DatagramPacket packetFromServer = null;
-
         try {
             multicastSocket = new MulticastSocket(MULTICAST_PORT);
             multicastSocket.joinGroup(multicastAddress);
