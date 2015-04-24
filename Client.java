@@ -24,6 +24,7 @@ public class Client
     private int clientId;
 
     //sendData()
+    InetAddress serverAddress;
 
     //recieveData()
     InetAddress multicastAddress;
@@ -56,6 +57,7 @@ public class Client
             System.out.println("Successfully connected via port " + socket.getLocalPort());
             datagramSocket = new DatagramSocket();
             System.out.println("Connected via UDP on port " + datagramSocket.getLocalPort());
+            serverAddress = InetAddress.getByName(SERVER_NAME);
             multicastAddress = InetAddress.getByName(MULTICAST_IP);
         } catch (UnknownHostException host) {
             System.out.println("!!!!! UnknownHostException in connect() !!!!!");
@@ -94,13 +96,6 @@ public class Client
     }
 
     public void sendData() {
-        InetAddress serverAddress = null;
-        try {
-            serverAddress = InetAddress.getByName(SERVER_NAME);
-        } catch (UnknownHostException host) {
-            System.out.println("!!!!! UnknownHostException in sendData() !!!!!");
-        }
-
         byte[] data = Integer.toString(clientId).getBytes();
         while(true) {
             DatagramPacket packetToServer = new DatagramPacket(data, data.length, serverAddress, 2000);
