@@ -76,6 +76,34 @@ public class Server
         }
     }
     
+    public void recieveData() {
+        byte[] data = new byte[2];
+        System.out.println("Recieved test data from client " + getData());
+
+        DatagramPacket packetFromClient = new DatagramPacket(data, data.length);
+
+        try{
+            senderClientSocket.receive(packetFromClient);
+            storeData(new String(packetFromClient.getData()));
+        } catch (SocketTimeoutException timeout) {
+            System.out.println("Sender timeout.");
+            needsSender = true;
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in recieveData() !!!!!");
+        }
+    }
+
+    public void sendData() {
+        byte[] data = getData().getBytes();
+        DatagramPacket packetToClient = new DatagramPacket(data, data.length, multicastAddress, MULTICAST_PORT);
+        try {
+            multicastSocket.send(packetToClient);
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in sendData() !!!!!");
+        }
+        System.out.println("Sent test data from client " + getData() + " to clientThreads.");
+    }
+    
     public void storeData(String data) {
         test = data;
     }
