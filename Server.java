@@ -28,7 +28,7 @@ public class Server
         needsSender = true;
         clientThreads = new PriorityBlockingQueue<ClientThread>();
     }
-    
+
     public void launch() {
         try {
             serverSocket = new ServerSocket(PORT);
@@ -59,8 +59,8 @@ public class Server
             }
         }
     }
-    
-        public void requestNewSender() {
+
+    public void requestNewSender() {
         try {
             while(needsSender) {
                 //This will block until a client thread can be retrieved
@@ -75,7 +75,7 @@ public class Server
             System.out.println("!!!!! InterruptedException in requestNewSender() !!!!!");
         }
     }
-    
+
     public void recieveData() {
         byte[] data = new byte[2];
         System.out.println("Recieved test data from client " + getData());
@@ -103,7 +103,7 @@ public class Server
         }
         System.out.println("Sent test data from client " + getData() + " to clientThreads.");
     }
-    
+
     public void storeData(String data) {
         test = data;
     }
@@ -111,7 +111,7 @@ public class Server
     public String getData() {
         return test;
     }
-    
+
     public void addClientThread(Socket clientSocket) {
         lastClientId++;
         ClientThread thread = new ClientThread(clientSocket, lastClientId);
