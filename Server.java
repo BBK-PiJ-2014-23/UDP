@@ -58,8 +58,8 @@ public class Server
         }
     }
     
-    public void storeData(String input) {
-        test = input;
+    public void storeData(String data) {
+        test = data;
     }
 
     public String getData() {
