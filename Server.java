@@ -111,7 +111,14 @@ public class Server
     public String getData() {
         return test;
     }
-
+    
+    public void addClientThread(Socket clientSocket) {
+        lastClientId++;
+        ClientThread thread = new ClientThread(clientSocket, lastClientId);
+        clientThreads.add(thread);
+        thread.start();
+    }
+    
     public static void main(String[] args) {
         Server2 server = new Server2();
         server.launch();
