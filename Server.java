@@ -31,13 +31,6 @@ public class Server
         queue = new LinkedList<ServerThread>();
     }
 
-    public static void main(String[] args) {
-        Server server = new Server();
-        while(true) {
-            server.listen();
-        }
-    }
-
     public void listen() {
         //System.out.println("Server listening on port " + socket.getLocalPort());
         try {
@@ -56,6 +49,15 @@ public class Server
         }
     }
 
+        public void requestNewSender() {
+        if (queue.size() > 0) {
+            ServerThread thread = queue.remove();
+            thread.makeClientSender();
+        } else {
+            needsSender = true;
+        }
+    }
+    
     public void storeData(String input) {
         test = input;
     }
@@ -64,12 +66,10 @@ public class Server
         return test;
     }
 
-    public void requestNewSender() {
-        if (queue.size() > 0) {
-            ServerThread thread = queue.remove();
-            thread.makeClientSender();
-        } else {
-            needsSender = true;
+    public static void main(String[] args) {
+        Server server = new Server();
+        while(true) {
+            server.listen();
         }
     }
 }
