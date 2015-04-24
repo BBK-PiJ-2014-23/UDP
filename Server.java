@@ -29,24 +29,6 @@ public class Server
         clientThreads = new PriorityBlockingQueue<ClientThread>();
     }
 
-    public void listen() {
-        //System.out.println("Server listening on port " + socket.getLocalPort());
-        try {
-            client = socket.accept();
-        } catch (IOException io) {
-            System.out.println("!!!!! IOException in listen() !!!!!");
-        }
-        System.out.println("Client connected on port " + client.getPort());
-        lastClientId++;
-        ServerThread thread = new ServerThread(this, datagramSocket, client, lastClientId, needsSender);
-        thread.start();
-        if (needsSender) {
-            needsSender = false;
-        } else {
-            queue.add(thread);
-        }
-    }
-
         public void requestNewSender() {
         if (queue.size() > 0) {
             ServerThread thread = queue.remove();
