@@ -28,7 +28,38 @@ public class Server
         needsSender = true;
         clientThreads = new PriorityBlockingQueue<ClientThread>();
     }
+    
+    public void launch() {
+        try {
+            serverSocket = new ServerSocket(PORT);
+            senderClientSocket = new DatagramSocket(PORT);
+            senderClientSocket.setSoTimeout(1000);
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in launch() !!!!!");
+        }
+        try {
+            multicastAddress = InetAddress.getByName(MULTICAST_IP);
+        } catch (UnknownHostException host) {
+            System.out.println("!!!!! UnknownHostException in launch() !!!!!");
+        }
+        try {
+            multicastSocket = new DatagramSocket();
+        } catch (SocketException socket) {
+            System.out.println("!!!!! SocketException in launch() !!!!!");
+        }
+        listenerThread = new ListenerThread(this, serverSocket);
+        listenerThread.start();
 
+        while(true) {
+            if(needsSender) {
+                requestNewSender();
+            } else {
+                recieveData();
+                sendData();
+            }
+        }
+    }
+    
         public void requestNewSender() {
         if (queue.size() > 0) {
             ServerThread thread = queue.remove();
