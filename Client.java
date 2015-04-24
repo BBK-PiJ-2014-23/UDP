@@ -15,6 +15,9 @@ public class Client
     //connect()
     private Socket socket;
     private DatagramSocket datagramSocket;
+    private InetAddress serverAddress;
+    private InetAddress multicastAddress;
+    private MulticastSocket multicastSocket;
 
     //setupStreams()
     private DataInputStream inputStream;
@@ -22,13 +25,6 @@ public class Client
 
     //acceptClientId()
     private int clientId;
-
-    //sendData()
-    InetAddress serverAddress;
-
-    //recieveData()
-    InetAddress multicastAddress;
-    MulticastSocket multicastSocket;
 
     public Client() {
         isSender = false;
