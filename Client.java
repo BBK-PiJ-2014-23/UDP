@@ -4,21 +4,25 @@ import java.net.*;
 public class Client
 {
     private static final String SERVER_IP = "127.0.0.1";
-    private static final String SERVER_NAME = "localhost";
     private static final int SERVER_PORT = 2000;
-
+    private static final String SERVER_NAME = "localhost";
     private static final String MULTICAST_ADDRESS = "224.0.0.3";
     private static final int MULTICAST_PORT = 8888;
-
+    
+    //constructor
+    private boolean isSender;
+    
+    //connect()
     private Socket socket;
-
     private DatagramSocket datagramSocket;
-
+    
+    //setupStreams()
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
-
+    
+    //acceptClientId()
     private int clientId;
-    private boolean isSender;
+    
 
     public Client() {
         isSender = false;
