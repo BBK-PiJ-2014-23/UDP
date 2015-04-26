@@ -1,5 +1,6 @@
 import java.io.*;
 import javax.sound.sampled.*;
+
 public class AudioThread extends Thread
 {
     private static final int BUFFER_SIZE = 1024;
