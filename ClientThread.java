@@ -24,6 +24,7 @@ public class ClientThread extends Thread implements Comparable<ClientThread>
     public synchronized void run() {
         setupStreams();  
         sendClientId();
+        sendClientRole();
         while(isClientAlive) {
             try {              
                 wait();
@@ -63,7 +64,6 @@ public class ClientThread extends Thread implements Comparable<ClientThread>
 
     public synchronized void sendClientRole() {
         try  {
-            //System.out.println("This needs a sender? " + hasSenderClient);
             outputStream.writeBoolean(hasSenderClient);
         } catch (IOException io) {
             System.out.println("!!!!! IOException in sendClientRole() !!!!!");
