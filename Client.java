@@ -33,17 +33,18 @@ public class Client
     public void launch() {
         connect();
         setupStreams();
+        //ClientRoleThread roleThread = new ClientRoleThread(this, socket, inputStream);
+        //roleThread.start();
         acceptClientId();
-
-        while(true) {
-            acceptRole();
-            if (isSender) {
-                sendData();
-            } else {
-                recieveData();
-                playAudio();
-            }
+        acceptRole();
+        if (!isSender) {
+            recieveData();
         }
+        sendData();
+    }
+
+    public void setRole(boolean bool) {
+        isSender = bool;
     }
 
     public void connect() {
@@ -86,7 +87,9 @@ public class Client
 
     public void acceptRole() {
         try {
+            System.out.println("before");
             isSender = inputStream.readBoolean();
+            System.out.println("after");
         } catch (IOException io) {
             System.out.println("!!!!! IOException in acceptRole() !!!!!");
         }
@@ -107,22 +110,24 @@ public class Client
 
     public void recieveData() {
         DatagramPacket packetFromServer = null;
-        try {
-            byte[] data = new byte[2];
-            packetFromServer = new DatagramPacket(data, data.length);
-            multicastSocket.receive(packetFromServer);
-        } catch (IOException io) {
-            System.out.println("!!!!! IOException in recieveData() !!!!!");
-        }
+        while(!isSender) {
+            try {
+                byte[] data = new byte[2];
+                packetFromServer = new DatagramPacket(data, data.length);
+                multicastSocket.receive(packetFromServer);
+            } catch (IOException io) {
+                System.out.println("!!!!! IOException in recieveData() !!!!!");
+            }
 
-        String test = new String(packetFromServer.getData());
-        System.out.println("Recieved client " + test + "test data from server");
+            String test = new String(packetFromServer.getData());
+            System.out.println("Recieved client " + test + "test data from server");
+        }
     }
 
     public void playAudio() {
 
     }
-
+    
     public static void main(String[] args) {
         Client client = new Client();
         client.launch();
