@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import javax.sound.sampled.*;
 
 public class Client
 {
@@ -8,6 +9,7 @@ public class Client
     private static final String SERVER_NAME = "localhost";
     private static final String MULTICAST_IP = "224.0.0.3";
     private static final int MULTICAST_PORT = 8888;
+    private static final String fileName = "piano.wav";
 
     //constructor
     private boolean isSender;
@@ -33,14 +35,16 @@ public class Client
     public void launch() {
         connect();
         setupStreams();
-        //ClientRoleThread roleThread = new ClientRoleThread(this, socket, inputStream);
-        //roleThread.start();
         acceptClientId();
-        acceptRole();
-        if (!isSender) {
-            recieveData();
+        while(true) {
+            acceptRole();
+            if (!isSender) {
+                launchAudioPlayer();
+                recieveData();
+            } else {
+                sendData();
+            }
         }
-        sendData();
     }
 
     public void setRole(boolean bool) {
@@ -87,9 +91,7 @@ public class Client
 
     public void acceptRole() {
         try {
-            System.out.println("before");
             isSender = inputStream.readBoolean();
-            System.out.println("after");
         } catch (IOException io) {
             System.out.println("!!!!! IOException in acceptRole() !!!!!");
         }
@@ -110,24 +112,22 @@ public class Client
 
     public void recieveData() {
         DatagramPacket packetFromServer = null;
-        while(!isSender) {
-            try {
-                byte[] data = new byte[2];
-                packetFromServer = new DatagramPacket(data, data.length);
-                multicastSocket.receive(packetFromServer);
-            } catch (IOException io) {
-                System.out.println("!!!!! IOException in recieveData() !!!!!");
-            }
-
-            String test = new String(packetFromServer.getData());
-            System.out.println("Recieved client " + test + "test data from server");
+        try {
+            byte[] data = new byte[2];
+            packetFromServer = new DatagramPacket(data, data.length);
+            multicastSocket.receive(packetFromServer);
+        } catch (IOException io) {
+            System.out.println("!!!!! IOException in recieveData() !!!!!");
         }
+
+        String test = new String(packetFromServer.getData());
+        System.out.println("Recieved client " + test + "test data from server");
     }
 
-    public void playAudio() {
-
+    public void launchAudioPlayer() {
+        (new AudioThread(fileName)).start();
     }
-    
+
     public static void main(String[] args) {
         Client client = new Client();
         client.launch();
