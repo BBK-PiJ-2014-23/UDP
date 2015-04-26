@@ -12,6 +12,7 @@ public class AudioThread extends Thread
 
     @Override
     public void run() {
+        // This would happen on the sending client
         File audioFile = new File(fileName);
         FileInputStream fileInputStream = null;
         try {
@@ -21,9 +22,30 @@ public class AudioThread extends Thread
         byte[] data = new byte[999999];
         try {
             int bytesRead = fileInputStream.read(data);
+            // send data to server:
+            //DatagramPacket packetToServer = new DatagramPacket(data, data.length, serverAddress, 2000);
+            //try {
+            //    datagramSocket.send(packetToServer);
+            //} catch (IOException io) {
+            //    System.out.println("!!!!! IOException in sendData() !!!!!");
+            //}
         } catch (IOException io) {
-            System.out. println("1");
+            System.out.println("!!!!! IOException in AudioThread !!!!!");
         }
+        
+        
+                
+        // This would happen on the recieving client
+        
+        
+        // recieve data form server:
+        //try {
+        //    byte[] data = new byte[999999];
+        //    packetFromServer = new DatagramPacket(data, data.length);
+        //    multicastSocket.receive(packetFromServer);
+        //} catch (IOException io) {
+        //    System.out.println("!!!!! IOException in recieveData() !!!!!");
+        //}
 
         InputStream inputStream = new ByteArrayInputStream(data);
         try {
