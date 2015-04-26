@@ -11,28 +11,42 @@ enough information, together with appropriate online sources, to tackle this (in
 problem. It is more representative of the commercial usage of Java networking than is
 RMI, which is usually hidden under other layers.
 
+
+
 The problem description
+
 The first client to connect to the server sends audio the audio. Clients that connect to
 the server after this will receive the audio and play it back.
 
+
+
 Protocol usage
+
 TCP | connection is used for signaling
 UDP | connection is used for streaming data
 
 
+
 Architecture (slightly different from the docs as the architecture was suggested, not mandated):
+
 * The server class launches a listener thread which can add new clients at any given time.
 * When a client connects, the server class launches a new thread through which server and client can communicate via TCP
 * The server recieves data via a datagram socket and broadcasts to all clients via a multicast socket.
 * As the server recieves data only from one client and sends data only to one multicast socket, the UDP data handling remains
   in the Server class.
 
+
+
 Problems:
+
 * Sending and recieving audio has not been implemented due to time constraints.
 * Testing was done manually because unit tests - as they were taught - did not work within a client/server model.
   https://moodle.bbk.ac.uk/mod/forumng/discuss.php?d=496
   
+
+  
 Achievements:
+
 * This has some fairly sophisticated error handling:
 	- If the server is not available when clients connect, clients will keep trying to connect until the server becomes available
 	  rather than crashing.
@@ -49,8 +63,11 @@ Achievements:
   client - the data would be extracted from the packet and fed back into an input stream.
   In order to prove functionality, a recieving client will play back an audio file which it has already stored. This was tested
   with wav files.
+
+
   
 Usage:
+
 * enter 'java Server' to launch the server.
 * enter 'java "IP" "SOUNDFILE"' to launch the client, replacing any "" statements with appropriate entries.
 *
