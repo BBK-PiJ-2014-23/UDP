@@ -3,14 +3,17 @@ import java.net.*;
 
 public class Client
 {
-    private static final String SERVER_IP = "127.0.0.1";
     private static final int SERVER_PORT = 2000;
     private static final String MULTICAST_IP = "224.0.0.3";
     private static final int MULTICAST_PORT = 8888;
-    private static final String fileName = "piano.wav";
 
     //constructor
+    private String serverIp;
+    private String fileName;
     private boolean isSender;
+
+    //launch()
+    private boolean isConnected;
 
     //connect()
     private Socket socket;
@@ -26,21 +29,25 @@ public class Client
     //acceptClientId()
     private int clientId;
 
-    public Client() {
-        isSender = false;
+    public Client(String serverIp, String fileName) {
+        this.serverIp = serverIp;
+        this.fileName = fileName;
+        this.isSender = false;
     }
 
     public void launch() {
         connect();
-        setupStreams();
-        acceptClientId();
-        while(true) {
-            acceptRole();
-            if (!isSender) {
-                launchAudioPlayer();
-                recieveData();
-            } else {
-                sendData();
+        if (isConnected) {
+            setupStreams();
+            acceptClientId();
+            while(true) {
+                acceptRole();
+                if (!isSender) {
+                    launchAudioPlayer();
+                    recieveData();
+                } else {
+                    sendData();
+                }
             }
         }
     }
@@ -52,17 +59,17 @@ public class Client
     public void connect() {
         System.out.println("Connecting to server...");
         try {
-            socket = new Socket(SERVER_IP, SERVER_PORT);
+            socket = new Socket(serverIp, SERVER_PORT);
             System.out.println("Successfully connected via port " + socket.getLocalPort());
             datagramSocket = new DatagramSocket();
             System.out.println("Connected via UDP on port " + datagramSocket.getLocalPort());
-            serverAddress = InetAddress.getByName(SERVER_IP);
+            serverAddress = InetAddress.getByName(serverIp);
             multicastAddress = InetAddress.getByName(MULTICAST_IP);
             multicastSocket = new MulticastSocket(MULTICAST_PORT);
             multicastSocket.joinGroup(multicastAddress);
+            isConnected = true;
         } catch (UnknownHostException host) {
-            System.out.println("!!!!! UnknownHostException in connect() !!!!!");
-            connect();
+            System.out.println("Server does not exist!");
         } catch (IOException io) {
             System.out.println("Server unavailable. Trying again...");
             connect();
@@ -127,7 +134,18 @@ public class Client
     }
 
     public static void main(String[] args) {
-        Client client = new Client();
-        client.launch();
+        if (args.length == 2) {
+            String serverIp = args[0];
+            String fileName = args[1];
+            File audioFile = new File(fileName);
+            if (audioFile.exists()) {
+                Client client = new Client(serverIp, fileName);
+                client.launch();
+            } else {
+                System.out.println("Address of sound file is incorrect.");
+            }
+        } else {
+            System.out.println("Please enter server IP and the address of a sound file");
+        }
     }
 }
