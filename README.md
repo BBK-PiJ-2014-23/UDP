@@ -50,8 +50,8 @@ Achievements:
 * This has some fairly sophisticated error handling:
 	- If the server is not available when clients connect, clients will keep trying to connect until the server becomes available
 	  rather than crashing.
-	- If and invalid server address was entered, the client will point that out.
-	- If and invalid address for the sound file was entered, the client will point that out.
+	- If an invalid server address was entered, the client will point that out.
+	- If an invalid address for the sound file was entered, the client will point that out.
 	- The server class stores all client threads in a data structure. Whenever the sender clients disconnects, the server will
 	  request another sender client via its related thread rather than crashing.
 * Instead of audio data, the sender client can send text via UDP and the server relays that text via UDP to all connected clients.
