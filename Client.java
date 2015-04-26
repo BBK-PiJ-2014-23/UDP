@@ -5,7 +5,6 @@ public class Client
 {
     private static final String SERVER_IP = "127.0.0.1";
     private static final int SERVER_PORT = 2000;
-    private static final String SERVER_NAME = "localhost";
     private static final String MULTICAST_IP = "224.0.0.3";
     private static final int MULTICAST_PORT = 8888;
     private static final String fileName = "piano.wav";
@@ -57,7 +56,7 @@ public class Client
             System.out.println("Successfully connected via port " + socket.getLocalPort());
             datagramSocket = new DatagramSocket();
             System.out.println("Connected via UDP on port " + datagramSocket.getLocalPort());
-            serverAddress = InetAddress.getByName(SERVER_NAME);
+            serverAddress = InetAddress.getByName(SERVER_IP);
             multicastAddress = InetAddress.getByName(MULTICAST_IP);
             multicastSocket = new MulticastSocket(MULTICAST_PORT);
             multicastSocket.joinGroup(multicastAddress);
