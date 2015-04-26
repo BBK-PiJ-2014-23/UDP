@@ -65,11 +65,8 @@ public class Server
             while(needsSender) {
                 //This will block until a client thread can be retrieved
                 ClientThread thread = clientThreads.take();
-                //Ensure that the reciever thread to become sender has not died in the meantime
-                if (!thread.getState().equals(Thread.State.TERMINATED)) {
-                    thread.makeClientSender();
-                    needsSender = false;
-                }
+                thread.makeClientSender();
+                needsSender = false;
             }
         } catch (InterruptedException interrupt) {
             System.out.println("!!!!! InterruptedException in requestNewSender() !!!!!");
@@ -118,7 +115,7 @@ public class Server
         clientThreads.add(thread);
         thread.start();
     }
-    
+
     public static void main(String[] args) {
         Server server = new Server();
         server.launch();
