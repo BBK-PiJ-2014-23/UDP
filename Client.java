@@ -84,7 +84,7 @@ public class Client
         try {
             clientId = inputStream.readInt();
         } catch (IOException io) {
-            System.out.println("!!!!! IOException in acceptClientId() !!!!!");
+            System.out.println("Server unavailable. Trying again...");
         }
         System.out.println("Recieved client id from server is " + clientId);
     }
@@ -93,7 +93,7 @@ public class Client
         try {
             isSender = inputStream.readBoolean();
         } catch (IOException io) {
-            System.out.println("!!!!! IOException in acceptRole() !!!!!");
+            System.out.println("Server unavailable. Trying again...");
         }
         System.out.println("Client is a sender? " + isSender);
     }
