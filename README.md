@@ -69,7 +69,7 @@ Achievements:
 Usage:
 
 * enter 'java Server' to launch the server.
-* enter 'java "IP" "SOUNDFILE"' to launch the client, replacing any "" statements with appropriate entries.
+* enter 'java Client "IP" "SOUNDFILE"' to launch the client, replacing any "" statements with appropriate entries.
 *
 
 
